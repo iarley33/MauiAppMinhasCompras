@@ -1,5 +1,6 @@
 using MauiAppMinhasCompras.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace MauiAppMinhasCompras.Views;
 
@@ -23,13 +24,19 @@ public partial class ListaProduto : ContentPage
 
 			List<Produto> tmp = await App.Db.GetAll();
 
-			tmp.ForEach(i => lista.Add(i));
-		}
+            foreach (var produto in tmp)
+            {
+                Debug.WriteLine($"Produto: {produto.Descricao}, Data: {produto.DataCadastro}");
+                lista.Add(produto);
+            }
 
-		catch (Exception ex)
+        }
+
+        catch (Exception ex)
 		{
 			await DisplayAlert("Ops", ex.Message, "OK");
 		}
+
     }
 
     private void ToolbarItem_Clicked(object sender, EventArgs e)
@@ -52,6 +59,8 @@ public partial class ListaProduto : ContentPage
 
 			lista.Clear();
 
+            lst_produtos.IsRefreshing = true;
+
 			List<Produto> tmp = await App.Db.Search(q);
 
 			tmp.ForEach(i => lista.Add(i));
@@ -60,6 +69,10 @@ public partial class ListaProduto : ContentPage
 		{
 			await DisplayAlert("Ops", ex.Message, "OK");
 		}
+        finally
+        {
+            lst_produtos.IsRefreshing = false;
+        }
     }
 
     private void ToolbarItem_Clicked_1(object sender, EventArgs e)
@@ -108,6 +121,51 @@ public partial class ListaProduto : ContentPage
         catch (Exception ex)
         {
             DisplayAlert("Ops", ex.Message, "OK");
+        }
+    }
+
+    private async void lst_produtos_Refreshing(object sender, EventArgs e)
+    {
+        try
+        {
+            lista.Clear();
+
+            List<Produto> tmp = await App.Db.GetAll();
+
+            tmp.ForEach(i => lista.Add(i));
+        }
+
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "OK");
+        }
+        finally
+        {
+            lst_produtos.IsRefreshing = false;
+        }
+    }
+
+    private async void Button_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            DatePicker inicioPicker = this.FindByName<DatePicker>("dt_inicio");
+            DatePicker fimPicker = this.FindByName<DatePicker>("dt_fim");
+
+            lista.Clear();
+
+            List<Produto> tmp = await App.Db.GetAll();
+
+            tmp.ForEach(i => lista.Add(i));
+        }
+
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "OK");
+        }
+        finally
+        {
+            lst_produtos.IsRefreshing = false;
         }
     }
 }

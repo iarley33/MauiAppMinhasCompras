@@ -15,7 +15,7 @@ namespace MauiAppMinhasCompras.Models
             {
                 if (value == null)
                 {
-                    throw new Exception("Por favor, preenche a descrição corretamente");
+                    throw new Exception("Por favor, preencha a descrição corretamente");
                 }
                 _descricao = value;
             }
@@ -23,6 +23,7 @@ namespace MauiAppMinhasCompras.Models
         public double Quantidade { get; set; }
         public double Preco {  get; set; }
 
+        public DateTime DataCadastro {  get; set; } = DateTime.Now;
         public double Total { get => Quantidade * Preco; }
     }
 }

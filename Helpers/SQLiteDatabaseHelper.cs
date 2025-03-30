@@ -21,10 +21,10 @@ namespace MauiAppMinhasCompras.Helpers
 
         public Task<List<Produto>> Update(Produto p) 
         {
-            string sql = "UPDATE Produto SET Descricao=?, Quantidade=?, Preco=? WHERE Id+?";
+            string sql = "UPDATE Produto SET Descricao=?, Quantidade=?, Preco=?, DataCadastro=? WHERE Id=?";
 
             return _conn.QueryAsync<Produto>(
-                sql, p.Descricao, p.Quantidade, p.Preco, p.Id
+                sql, p.Descricao, p.Quantidade, p.Preco, p.DataCadastro, p.Id
                 
              );
         }
@@ -41,6 +41,12 @@ namespace MauiAppMinhasCompras.Helpers
             string sql = "SELECT * FROM Produto WHERE descricao LIKE '%"+q+"%'";
 
             return _conn.QueryAsync<Produto>(sql);
+        }
+
+        public Task<List<Produto>> GetByPeriod(DateTime inicio, DateTime fim)
+        {
+            string sql = "SELECT * FROM Produto WHERE DataCadastro BETWEEN ? AND ?";
+            return _conn.QueryAsync<Produto>(sql, inicio, fim);
         }
     }
 }

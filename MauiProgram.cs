@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MauiAppMinhasCompras.Helpers;
 
 namespace MauiAppMinhasCompras
 {
@@ -18,6 +19,9 @@ namespace MauiAppMinhasCompras
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "minhascompras.db");
+
+            builder.Services.AddSingleton(new SQLiteDatabaseHelper(dbPath));
 
             return builder.Build();
         }
